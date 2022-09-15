@@ -1,7 +1,7 @@
 # EduMatch
 
 ## Project Description
-This is a mini project that is built ground up to showcase different screens of an application. I utilized the mobile first design approach where I simply design the layout from smaller screens (mobile) to larger screens. Common components are abstracted out for reusability. 
+This is a mini project that is built ground up to showcase different screens of an application. I utilized the mobile first design approach where I simply design the layout from smaller screens (mobile) to larger screens. Common components are abstracted out for reusability. Form validations are also included for the inputs. 
 
 | Folder  | Purpose |
 | ------------- | ------------- |

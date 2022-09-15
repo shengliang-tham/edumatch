@@ -1,11 +1,23 @@
+import { useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
   const notificationMethods = [
     { id: "support", title: "Support" },
     { id: "sales", title: "Sales" },
   ];
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(JSON.stringify(data));
+  };
 
   return (
     <>
@@ -126,100 +138,142 @@ export default function Home() {
         </div>
 
         <div className="md:col-span-5">
-          <div className="flex items-center">
-            <label className="text-base font-medium text-gray-900 mr-4">
-              Department:
-            </label>
-            <fieldset>
-              <div className="flex items-center gap-2">
-                {notificationMethods.map((notificationMethod, index) => (
-                  <div
-                    key={notificationMethod.id}
-                    className="flex items-center"
-                  >
-                    <input
-                      id={notificationMethod.id}
-                      name="notification-method"
-                      type="radio"
-                      defaultChecked={index === 0}
-                      className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label
-                      htmlFor={notificationMethod.id}
-                      className="ml-3 block text-sm font-medium text-gray-700"
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex items-center">
+              <label className="text-base font-medium text-gray-900 mr-4">
+                Department:
+              </label>
+              <fieldset>
+                <div className="flex items-center gap-2">
+                  {notificationMethods.map((notificationMethod, index) => (
+                    <div
+                      key={notificationMethod.id}
+                      className="flex items-center"
                     >
-                      {notificationMethod.title}
-                    </label>
-                  </div>
-                ))}
+                      <input
+                        id={notificationMethod.id}
+                        name="notification-method"
+                        type="radio"
+                        defaultChecked={index === 0}
+                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        {...register("department", {
+                          required: "Please select one",
+                        })}
+                      />
+                      <label
+                        htmlFor={notificationMethod.id}
+                        className="ml-3 block text-sm font-medium text-gray-700"
+                      >
+                        {notificationMethod.title}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+            <div className="flex flex-col gap-4 mt-5">
+              <div className="border-primary focus-within:border-primary">
+                <input
+                  type="text"
+                  name="subject"
+                  id="subject"
+                  className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
+                  placeholder="Subject"
+                  {...register("subject", {
+                    required: "Please enter a subject",
+                  })}
+                />
+                <p className="text-xs text-red-600">
+                  {errors.subject?.message}
+                </p>
               </div>
-            </fieldset>
-          </div>
-          <div className="flex flex-col gap-4 mt-5">
-            <div className="border-primary focus-within:border-primary">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
-                placeholder="Subject"
-              />
+
+              <div className="border-primary focus-within:border-primary">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
+                  placeholder="Name"
+                  {...register("name", {
+                    required: "Please enter your name",
+                  })}
+                />
+                <p className="text-xs text-red-600">{errors.name?.message}</p>
+              </div>
+              <div className="border-primary focus-within:border-primary">
+                <input
+                  type="text"
+                  name="email"
+                  id="email"
+                  className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
+                  placeholder="name@example.com"
+                  {...register("email", {
+                    required: "Please enter your email",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                />
+                <p className="text-xs text-red-600">{errors.email?.message}</p>
+              </div>
+              <div className="border-primary focus-within:border-primary">
+                <textarea
+                  type="text"
+                  name="message"
+                  id="message"
+                  className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
+                  placeholder="Message..."
+                  {...register("message", {
+                    required: "Please enter your message",
+                  })}
+                />
+                <p className="text-xs text-red-600">
+                  {errors.message?.message}
+                </p>
+              </div>
+              <div className="flex rounded-md shadow-sm">
+                <label className="inline-flex items-center border-r-2 border-black bg-gray-200 px-3 text-gray-500">
+                  Choose file
+                </label>
+                <label className="block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-gray-50 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                  No file Chosen
+                </label>
+                <label className="inline-flex items-center bg-gray-500 rounded-r-md px-3 text-white hover:cursor-pointer">
+                  Browse
+                  <input type="file" />
+                </label>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <div className="flex gap-4">
+                  <input
+                    id="agree"
+                    name="agree"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    {...register("terms", {
+                      required: "Please tick",
+                    })}
+                  />
+                  <label htmlFor="agree" className="text-xs">
+                    I agree to terms and conditions.
+                  </label>
+                  <p className="text-xs text-red-600">
+                    {errors.terms?.message}
+                  </p>
+                </div>
+
+                <button
+                  className="inline-flex items-center bg-primary rounded px-4 py-1 text-white"
+                  type="submit"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
-            <div className="border-primary focus-within:border-primary">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
-                placeholder="Name"
-              />
-            </div>
-            <div className="border-primary focus-within:border-primary">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
-                placeholder="name@example.com"
-              />
-            </div>
-            <div className="border-primary focus-within:border-primary">
-              <textarea
-                type="text"
-                name="name"
-                id="name"
-                className="block w-full border-0 p-2 border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
-                placeholder="Message..."
-              />
-            </div>
-            <div className="flex rounded-md shadow-sm">
-              <label className="inline-flex items-center border-r-2 border-black bg-gray-200 px-3 text-gray-500">
-                Choose file
-              </label>
-              <label
-                type="text"
-                name="company-website"
-                id="company-website"
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-gray-50 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              >
-                No file Chosen
-              </label>
-              <button className="inline-flex items-center bg-gray-500 rounded-r-md px-3 text-white">
-                Browse
-              </button>
-            </div>
-            <div className="flex items-center gap-4">
-              <input
-                id="agree"
-                name="agree"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label htmlFor="agree" className="text-xs">
-                I agree to terms and conditions.
-              </label>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
       <Footer />
